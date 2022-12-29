@@ -1,0 +1,126 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Size ukuranLayar = MediaQuery.of(context).size;
+    Orientation orientation = MediaQuery.of(context).orientation;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Responsive Layout')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              'Ukuran Layar : ${ukuranLayar.width.toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 20),
+            ),
+            Text(
+              'Orientation : $orientation',
+              style: TextStyle(fontSize: 20.0),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      color: Colors.blue,
+                      child: LayoutBuilder(builder: (context, constraints) {
+                        return Column(
+                          children: [
+                            Text(
+                              'MediaQuery : ${ukuranLayar.width.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                            Text(
+                              'LayoutBuilder : ${constraints.maxWidth.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      return Column(
+                        children: [
+                          Text(
+                            'MediaQuery : ${ukuranLayar.width.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            'LayoutBuilder : ${constraints.maxWidth.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          Container(
+                            height: 500,
+                            child:
+                                LayoutBuilder(builder: (context, constraints) {
+                              if (constraints.maxWidth < 600) {
+                                return ListView(
+                                  children: generateContainers(),
+                                );
+                              } else if (constraints.maxWidth < 900) {
+                                return GridView.count(
+                                  crossAxisCount: 2,
+                                  children: generateContainers(),
+                                );
+                              } else {
+                                return GridView.count(
+                                  crossAxisCount: 6,
+                                  children: generateContainers(),
+                                );
+                              }
+                            }),
+                          )
+                        ],
+                      );
+                    }),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Widget> generateContainers() {
+    return List<Widget>.generate(20, (index) {
+      return Container(
+        margin: const EdgeInsets.all(8),
+        color: Colors.green,
+        height: 200,
+      );
+    });
+  }
+}
